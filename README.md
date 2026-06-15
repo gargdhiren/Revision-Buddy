@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RevisionBuddy
+
+An AI-powered notes and memorization app built with Next.js, TypeScript, and Tailwind CSS.
+
+## What it does
+
+RevisionBuddy helps you retain what you study by turning your notes into flashcards, cloze deletions, and MCQs — automatically. It uses spaced repetition (Leitner system) to schedule reviews at the right time, so you study smarter, not harder.
+
+## Features (MVP in progress)
+
+- **Auth** — GitHub OAuth via NextAuth.js
+- **Notes** — Markdown editor with live preview and auto-save *(coming soon)*
+- **AI Generation** — Flashcards, MCQs, and cloze deletions from your notes via Ollama *(coming soon)*
+- **Spaced Repetition** — Leitner system with scheduled reviews *(coming soon)*
+- **Progress Dashboard** — Retention curves, streaks, weak spot identification *(coming soon)*
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript (strict) |
+| Styling | Tailwind CSS v4 + shadcn/ui |
+| Animation | Framer Motion |
+| Global State | Zustand |
+| Server State | TanStack Query |
+| Forms | React Hook Form + Zod |
+| Auth | NextAuth.js v5 |
+| AI | Vercel AI SDK + Ollama (local) |
+| Database | PostgreSQL |
+| Charts | Recharts |
+| Deploy | Vercel |
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- pnpm
+- PostgreSQL *(coming soon)*
+- Ollama *(coming soon)*
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Clone the repo
+git clone <your-repo-url>
+cd revision-buddy
+
+# Install dependencies
+pnpm install
+
+# Set up environment variables
+# Create .env.local and fill in the values below
+
+# Start the dev server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` file with the following:
 
-## Learn More
+```env
+AUTH_SECRET=           # Generate with: pnpm dlx auth secret
+AUTH_GITHUB_ID=        # GitHub OAuth App Client ID
+AUTH_GITHUB_SECRET=    # GitHub OAuth App Client Secret
+```
 
-To learn more about Next.js, take a look at the following resources:
+To set up GitHub OAuth:
+1. Go to GitHub → Settings → Developer settings → OAuth Apps → New OAuth App
+2. Homepage URL: `http://localhost:3000`
+3. Callback URL: `http://localhost:3000/api/auth/callback/github`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/                    # Route tree (Next.js App Router)
+│   ├── (auth)/             # Auth routes — signin, signup
+│   ├── (dashboard)/        # Protected routes — dashboard, notes, review
+│   └── api/auth/           # NextAuth API handler
+├── components/             # Reusable UI components
+│   └── ui/                 # shadcn/ui primitives
+├── lib/                    # Logic layer
+│   └── auth.ts             # NextAuth config
+├── hooks/                  # Custom React hooks
+├── store/                  # Zustand global state
+└── types/                  # TypeScript type definitions
+```
 
-## Deploy on Vercel
+## Status
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Currently in **Phase 1 — Foundation**. See [project_plan.md](./project_plan.md) for the full roadmap.
