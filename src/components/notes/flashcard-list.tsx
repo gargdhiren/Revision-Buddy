@@ -22,10 +22,10 @@ export function FlashcardList({ flashcards }: { flashcards: Flashcard[] }) {
       </h2>
       <div className="flex flex-col gap-3">
         {flashcards.map((card) => (
-          <div key={card.id} className="border rounded-lg p-4 flex flex-col gap-2">
+          <div key={card.id} className="brutal-card rounded-md bg-card p-4 flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <span
-                className={`text-xs font-medium px-2 py-0.5 rounded-full ${typeColors[card.type]}`}
+                className={`text-xs font-bold px-2 py-0.5 rounded-full border-2 border-foreground ${typeColors[card.type]}`}
               >
                 {typeLabels[card.type]}
               </span>

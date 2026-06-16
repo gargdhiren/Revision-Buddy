@@ -25,11 +25,11 @@ export function MobileNav({ dueCount }: { dueCount: number }) {
         <span className="sr-only">Open navigation</span>
       </SheetTrigger>
       <SheetContent side="left" className="w-64 p-0" showCloseButton={false}>
-        <div className="flex h-14 items-center gap-2.5 border-b px-5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
+        <div className="flex h-14 items-center gap-2.5 border-b-2 border-foreground px-5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-md border-2 border-foreground bg-primary">
             <BookOpen className="h-4 w-4 text-primary-foreground" />
           </div>
-          <SheetTitle>RevisionBuddy</SheetTitle>
+          <SheetTitle>Revision Buddy</SheetTitle>
         </div>
         <div className="p-3">
           <NavLinks dueCount={dueCount} onNavigate={() => setOpen(false)} />

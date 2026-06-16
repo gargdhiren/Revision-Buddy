@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RevisionBuddy",
+  title: "Revision Buddy",
   description: "AI-powered notes and memorization app",
 };
 

@@ -23,7 +23,7 @@ export function SearchInput() {
       placeholder="Search notes..."
       defaultValue={searchParams.get("q") ?? ""}
       onChange={(e) => handleSearch(e.target.value)}
-      className="w-64 rounded-md border bg-transparent px-3 py-1.5 text-sm outline-none placeholder:text-muted-foreground focus:ring-1 focus:ring-ring"
+      className="w-64 rounded-md border-2 border-foreground bg-card px-3 py-1.5 text-sm outline-none placeholder:text-muted-foreground focus:shadow-sm focus:-translate-x-px focus:-translate-y-px transition-all"
     />
   );
 }

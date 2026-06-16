@@ -19,7 +19,7 @@ export function WeeklyChart({ data }: { data: ChartData[] }) {
   const total = data.reduce((sum, d) => sum + d.correct + d.incorrect, 0);
 
   return (
-    <div className="border rounded-xl p-6 bg-card shadow-sm">
+    <div className="brutal-card rounded-md p-6 bg-card">
       <div className="flex items-center justify-between mb-1">
         <h2 className="text-sm font-semibold">Weekly Activity</h2>
         <span className="text-xs text-muted-foreground">{total} reviews this week</span>

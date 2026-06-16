@@ -36,10 +36,10 @@ export function NavLinks({
             onClick={onNavigate}
             aria-current={isActive ? "page" : undefined}
             className={cn(
-              "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              "group flex items-center gap-3 rounded-md border-2 px-3 py-2 text-sm font-semibold transition-all",
               isActive
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                ? "border-foreground bg-primary text-primary-foreground shadow-sm"
+                : "border-transparent text-muted-foreground hover:border-foreground hover:bg-accent hover:text-accent-foreground"
             )}
           >
             <link.icon className="h-4 w-4 shrink-0" />
@@ -47,9 +47,9 @@ export function NavLinks({
             {showBadge && (
               <span
                 className={cn(
-                  "inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold tabular-nums",
+                  "inline-flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-foreground px-1.5 text-[11px] font-bold tabular-nums",
                   isActive
-                    ? "bg-primary-foreground/20 text-primary-foreground"
+                    ? "bg-card text-foreground"
                     : "bg-primary text-primary-foreground"
                 )}
               >

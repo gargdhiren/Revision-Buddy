@@ -8,7 +8,7 @@ export function NoteCard({ note }: { note: Note }) {
   return (
     <Link
       href={`/notes/${note.id}`}
-      className="group flex flex-col gap-3 p-5 rounded-xl border bg-card shadow-sm hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 transition-all"
+      className="group brutal-press flex flex-col gap-3 p-5 rounded-md bg-card"
     >
       <div className="flex items-start gap-3">
         <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">

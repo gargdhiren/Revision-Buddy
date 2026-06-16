@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 
@@ -34,6 +35,11 @@ export async function POST(req: NextRequest) {
       data: { box: newBox, nextReviewAt },
     }),
   ]);
+
+  // Due counts in the shared dashboard layout/pages are now stale — invalidate them
+  revalidatePath("/dashboard");
+  revalidatePath("/review");
+  revalidatePath("/notes");
 
   return NextResponse.json({ ok: true });
 }

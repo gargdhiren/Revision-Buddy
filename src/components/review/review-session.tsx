@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Flashcard } from "@prisma/client";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle, BookOpen, ArrowRight } from "lucide-react";
+import { CheckCircle, XCircle, BookOpen, ArrowRight, Loader2 } from "lucide-react";
 
 function shuffle<T>(arr: T[]): T[] {
   return [...arr].sort(() => Math.random() - 0.5);
@@ -32,10 +32,14 @@ export function ReviewSession({ flashcards }: { flashcards: Flashcard[] }) {
   const [correct, setCorrect] = useState(0);
   const [incorrect, setIncorrect] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const card = cards[index];
 
   async function submitResult(result: "CORRECT" | "INCORRECT") {
+    if (isSubmitting) return; // guard against double-clicks
+    setIsSubmitting(true);
+
     await fetch("/api/review", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -52,12 +56,13 @@ export function ReviewSession({ flashcards }: { flashcards: Flashcard[] }) {
         setIndex((i) => i + 1);
         setShowAnswer(false);
         setSelectedOption(null);
+        setIsSubmitting(false);
       }, 600);
     }
   }
 
   async function handleMCQOption(option: string) {
-    if (selectedOption) return;
+    if (selectedOption || isSubmitting) return;
     setSelectedOption(option);
     const isCorrect = option === card.back;
     await submitResult(isCorrect ? "CORRECT" : "INCORRECT");
@@ -90,7 +95,14 @@ export function ReviewSession({ flashcards }: { flashcards: Flashcard[] }) {
         </div>
         <div className="flex gap-3">
           <Button onClick={() => router.refresh()}>Review Again</Button>
-          <Button variant="outline" onClick={() => router.push("/notes")}>
+          <Button
+            variant="outline"
+            onClick={() => {
+              // Bust the shared layout cache so the due badge updates everywhere
+              router.refresh();
+              router.push("/notes");
+            }}
+          >
             Back to Notes
           </Button>
         </div>
@@ -117,9 +129,9 @@ export function ReviewSession({ flashcards }: { flashcards: Flashcard[] }) {
         </div>
       </div>
 
-      <div className="w-full bg-muted rounded-full h-1">
+      <div className="w-full bg-card rounded-full h-3 border-2 border-foreground overflow-hidden">
         <motion.div
-          className="bg-primary h-1 rounded-full"
+          className="bg-primary h-full"
           animate={{ width: `${(index / cards.length) * 100}%` }}
           transition={{ duration: 0.3 }}
         />
@@ -132,9 +144,9 @@ export function ReviewSession({ flashcards }: { flashcards: Flashcard[] }) {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
-          className="border rounded-2xl p-8 bg-card flex flex-col gap-6 min-h-[300px]"
+          className="brutal-card rounded-md p-8 bg-card flex flex-col gap-6 min-h-[300px]"
         >
-          <span className={`text-xs font-medium px-2.5 py-1 rounded-full w-fit ${typeColors[card.type]}`}>
+          <span className={`text-xs font-bold px-2.5 py-1 rounded-full w-fit border-2 border-foreground ${typeColors[card.type]}`}>
             {typeLabels[card.type]}
           </span>
 
@@ -145,13 +157,13 @@ export function ReviewSession({ flashcards }: { flashcards: Flashcard[] }) {
               {options.map((option, i) => {
                 const isSelected = selectedOption === option;
                 const isCorrectOption = option === card.back;
-                let cls = "border rounded-xl px-4 py-3 text-sm text-left transition-all cursor-pointer";
+                let cls = "border-2 border-foreground rounded-md px-4 py-3 text-sm text-left font-medium transition-all cursor-pointer";
                 if (selectedOption) {
-                  if (isCorrectOption) cls += " border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300";
-                  else if (isSelected) cls += " border-red-400 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400";
+                  if (isCorrectOption) cls += " bg-green-200 text-green-900 dark:bg-green-800 dark:text-green-100 shadow-sm";
+                  else if (isSelected) cls += " bg-red-200 text-red-900 dark:bg-red-800 dark:text-red-100";
                   else cls += " opacity-40";
                 } else {
-                  cls += " hover:bg-accent hover:border-primary/30";
+                  cls += " bg-card hover:bg-accent hover:shadow-sm hover:-translate-x-px hover:-translate-y-px";
                 }
                 return (
                   <button key={i} className={cls} onClick={() => handleMCQOption(option)}>
@@ -183,13 +195,20 @@ export function ReviewSession({ flashcards }: { flashcards: Flashcard[] }) {
                     <Button
                       className="flex-1 gap-2 bg-green-600 hover:bg-green-700 text-white"
                       onClick={() => submitResult("CORRECT")}
+                      disabled={isSubmitting}
                     >
-                      <CheckCircle className="w-4 h-4" /> Correct
+                      {isSubmitting ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <CheckCircle className="w-4 h-4" />
+                      )}
+                      Correct
                     </Button>
                     <Button
                       className="flex-1 gap-2"
                       variant="outline"
                       onClick={() => submitResult("INCORRECT")}
+                      disabled={isSubmitting}
                     >
                       <XCircle className="w-4 h-4" /> Incorrect
                     </Button>

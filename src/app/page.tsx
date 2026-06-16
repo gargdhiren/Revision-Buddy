@@ -34,11 +34,13 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Nav */}
-      <nav className="border-b sticky top-0 bg-background/80 backdrop-blur-sm z-10">
+      <nav className="border-b-2 border-foreground sticky top-0 bg-background/90 backdrop-blur-sm z-10">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-primary" />
-            <span className="font-bold text-lg">RevisionBuddy</span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-md border-2 border-foreground bg-primary shadow-sm">
+              <BookOpen className="w-4 h-4 text-primary-foreground" />
+            </span>
+            <span className="font-bold text-lg">Revision Buddy</span>
           </div>
           <Link href="/signin">
             <Button size="sm">
@@ -50,19 +52,19 @@ export default function HomePage() {
 
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-6 pt-24 pb-20 text-center">
-        <div className="inline-flex items-center gap-2 border rounded-full px-4 py-1.5 text-sm text-muted-foreground mb-8">
+        <div className="inline-flex items-center gap-2 border-2 border-foreground rounded-full bg-card px-4 py-1.5 text-sm font-semibold mb-8 shadow-sm">
           <Sparkles className="w-3.5 h-3.5" />
           AI-powered · Free · Open source
         </div>
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight mb-6">
           Turn your notes into
           <br />
-          <span className="bg-gradient-to-r from-blue-500 to-violet-500 bg-clip-text text-transparent">
+          <span className="inline-block mt-3 -rotate-1 border-2 border-foreground bg-primary px-3 text-primary-foreground shadow-md">
             knowledge that sticks
           </span>
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-          RevisionBuddy reads your notes and generates flashcards, MCQs, and cloze deletions
+          Revision Buddy reads your notes and generates flashcards, MCQs, and cloze deletions
           automatically — then schedules your reviews using spaced repetition so you actually
           remember what you study.
         </p>
@@ -87,10 +89,10 @@ export default function HomePage() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="border rounded-2xl p-8 bg-card hover:shadow-md transition-shadow"
+              className="brutal-card rounded-md p-8 bg-card transition-transform hover:-translate-x-px hover:-translate-y-px"
             >
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-5">
-                <f.icon className="w-5 h-5 text-primary" />
+              <div className="w-10 h-10 rounded-md border-2 border-foreground bg-primary flex items-center justify-center mb-5 shadow-sm">
+                <f.icon className="w-5 h-5 text-primary-foreground" />
               </div>
               <h3 className="font-semibold text-lg mb-2">{f.title}</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">{f.description}</p>
@@ -107,8 +109,8 @@ export default function HomePage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {steps.map((step) => (
-            <div key={step.number} className="flex gap-5 p-6 border rounded-2xl bg-card">
-              <span className="text-3xl font-bold text-primary/20 shrink-0 leading-none mt-1">
+            <div key={step.number} className="flex gap-5 p-6 brutal-card rounded-md bg-card">
+              <span className="text-3xl font-bold text-primary shrink-0 leading-none mt-1">
                 {step.number}
               </span>
               <div>
@@ -121,7 +123,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats */}
-      <section className="border-y bg-muted/30">
+      <section className="border-y-2 border-foreground bg-secondary">
         <div className="max-w-6xl mx-auto px-6 py-20">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Why spaced repetition?</h2>
@@ -138,7 +140,7 @@ export default function HomePage() {
                 { value: "90%+", label: "retention after 30 days" },
                 { value: "15 min", label: "average daily review time" },
               ].map((stat) => (
-                <div key={stat.label} className="border rounded-xl p-5 bg-card">
+                <div key={stat.label} className="brutal-card rounded-md p-5 bg-card">
                   <p className="text-3xl font-bold text-primary">{stat.value}</p>
                   <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
                 </div>
@@ -162,11 +164,11 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t">
+      <footer className="border-t-2 border-foreground">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <BookOpen className="w-4 h-4" />
-            <span>RevisionBuddy</span>
+            <span>Revision Buddy</span>
           </div>
           <span>Built with Next.js · Groq AI · Neon</span>
         </div>

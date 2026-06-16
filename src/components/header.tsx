@@ -9,7 +9,7 @@ export async function Header({ dueCount }: { dueCount: number }) {
   const session = await auth();
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-sm sm:px-5">
+    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between border-b-2 border-foreground bg-background/90 px-4 backdrop-blur-sm sm:px-5">
       <div className="flex items-center gap-2">
         <MobileNav dueCount={dueCount} />
         <PageTitle />
@@ -18,7 +18,7 @@ export async function Header({ dueCount }: { dueCount: number }) {
       <div className="flex items-center gap-2">
         {session?.user && (
           <>
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-foreground bg-primary text-xs font-bold text-primary-foreground">
               {(session.user.name ?? session.user.email ?? "?")[0].toUpperCase()}
             </div>
             <span className="hidden text-sm text-muted-foreground sm:block">

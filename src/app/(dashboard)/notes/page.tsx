@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NoteCard } from "@/components/notes/note-card";
 import { createNote } from "@/lib/actions/notes";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/submit-button";
 import { SearchInput } from "@/components/notes/search-input";
 import { Plus, FileText } from "lucide-react";
 
@@ -37,10 +37,10 @@ export default async function NotesPage({
             <SearchInput />
           </Suspense>
           <form action={createNote}>
-            <Button type="submit" className="gap-1.5">
+            <SubmitButton pendingText="Creating...">
               <Plus className="w-4 h-4" />
               New Note
-            </Button>
+            </SubmitButton>
           </form>
         </div>
       </div>
@@ -60,10 +60,10 @@ export default async function NotesPage({
               <p className="font-medium">No notes yet</p>
               <p className="text-sm text-muted-foreground">Create your first note to get started.</p>
               <form action={createNote}>
-                <Button type="submit" className="gap-1.5 mt-2">
+                <SubmitButton className="mt-2" pendingText="Creating...">
                   <Plus className="w-4 h-4" />
                   Create Note
-                </Button>
+                </SubmitButton>
               </form>
             </>
           )}

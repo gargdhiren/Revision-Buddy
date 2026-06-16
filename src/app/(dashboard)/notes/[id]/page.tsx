@@ -25,7 +25,7 @@ export default async function NotePage({
     <div className="pb-16">
       <NoteEditor note={noteData} />
       {_count.flashcards > 0 && (
-        <div className="max-w-3xl mx-auto mt-6 flex items-center justify-between border rounded-lg px-4 py-3">
+        <div className="max-w-3xl mx-auto mt-6 flex items-center justify-between brutal-card rounded-md bg-card px-4 py-3">
           <p className="text-sm text-muted-foreground">
             {_count.flashcards} flashcard{_count.flashcards !== 1 ? "s" : ""} generated
           </p>
