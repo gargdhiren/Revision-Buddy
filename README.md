@@ -123,10 +123,16 @@ src/
 ├── app/                    # Routes (Next.js App Router)
 │   ├── (auth)/             # Public routes — signin, signup
 │   ├── (dashboard)/        # Protected routes — dashboard, notes, review
-│   └── api/auth/           # NextAuth handler
+│   └── api/
+│       ├── auth/           # NextAuth handler
+│       └── notes/          # Notes CRUD route handlers
 ├── components/             # Reusable UI components
+│   ├── notes/              # Notes-specific components (NoteEditor, NoteCard)
 │   └── ui/                 # shadcn/ui primitives
-├── lib/                    # Logic layer — auth, db, AI
+├── lib/
+│   ├── actions/            # Server Actions (createNote, deleteNote)
+│   ├── auth.ts             # NextAuth config
+│   └── db.ts               # Prisma singleton
 ├── hooks/                  # Custom React hooks
 ├── store/                  # Zustand global state
 └── types/                  # TypeScript type definitions
@@ -140,8 +146,10 @@ src/
 - [x] Project setup + App Router scaffold
 - [x] Layout — sidebar, header, dark/light mode
 - [x] Auth — GitHub OAuth, protected routes
-- [ ] Database schema + PostgreSQL connection
-- [ ] Notes CRUD + Markdown editor
+- [x] Database schema + PostgreSQL connection (Neon)
+- [x] Notes CRUD — create, auto-save, delete
+- [ ] Markdown editor with live preview
+- [ ] Manual marking syntax + flashcard generation
 - [ ] AI flashcard, MCQ, and cloze generation
 - [ ] Spaced repetition review sessions
 - [ ] Progress dashboard
@@ -159,4 +167,4 @@ src/
 
 ## Status
 
-Active development. Currently completing **Phase 1 — Foundation**.
+Active development. Currently completing **Phase 2 — Notes System**.

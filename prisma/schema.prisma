@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(cuid())
+  name              String?
+  email             String   @unique
+  image             String?
+  providerAccountId String   @unique
+  createdAt         DateTime @default(now())
+  notes             Note[]
+}
+
+model Note {
+  id         String      @id @default(cuid())
+  title      String
+  content    String      @default("")
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  userId     String
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  flashcards Flashcard[]
+}
+
+model Flashcard {
+  id            String          @id @default(cuid())
+  type          FlashcardType
+  front         String
+  back          String
+  options       Json?
+  box           Int             @default(1)
+  nextReviewAt  DateTime        @default(now())
+  createdAt     DateTime        @default(now())
+  noteId        String
+  note          Note            @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  reviewHistory ReviewHistory[]
+}
+
+model ReviewHistory {
+  id          String       @id @default(cuid())
+  result      ReviewResult
+  reviewedAt  DateTime     @default(now())
+  flashcardId String
+  flashcard   Flashcard    @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
+}
+
+enum FlashcardType {
+  FLASHCARD
+  CLOZE
+  MCQ
+}
+
+enum ReviewResult {
+  CORRECT
+  INCORRECT
+}
