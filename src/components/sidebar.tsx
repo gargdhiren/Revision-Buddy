@@ -1,39 +1,22 @@
-"use client";
+import { BookOpen } from "lucide-react";
+import { NavLinks } from "@/components/nav-links";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-
-const links = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/notes", label: "Notes" },
-  { href: "/review", label: "Review" },
-];
-
-export function Sidebar() {
-  const pathname = usePathname();
-
+export function Sidebar({ dueCount }: { dueCount: number }) {
   return (
-    <nav className="w-56 bg-sidebar border-r flex flex-col p-3 gap-1 shrink-0">
-      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 py-2">Menu</p>
-      {links.map((link) => {
-        const isActive = link.href === pathname;
+    <aside className="hidden w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar md:flex">
+      <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border px-5">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
+          <BookOpen className="h-4 w-4 text-primary-foreground" />
+        </div>
+        <span className="font-semibold tracking-tight">RevisionBuddy</span>
+      </div>
 
-        return (
-          <Link
-            className={cn(
-              "block px-3 py-2 rounded-md text-sm",
-              isActive
-                ? "font-semibold border-l-2 border-blue-500 pl-2.5"
-                : "text-muted-foreground",
-            )}
-            href={link.href}
-            key={link.href}
-          >
-            {link.label}
-          </Link>
-        );
-      })}
-    </nav>
+      <div className="flex-1 p-3">
+        <p className="px-3 pb-2 pt-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          Menu
+        </p>
+        <NavLinks dueCount={dueCount} />
+      </div>
+    </aside>
   );
 }

@@ -2,7 +2,7 @@
 
 > Study smarter. Remember longer.
 
-RevisionBuddy is an AI-powered notes and memorization app. You write notes, it generates flashcards, cloze deletions, and MCQs from them — then schedules your reviews using spaced repetition so you actually retain what you study.
+RevisionBuddy is an AI-powered notes and memorization app. You write notes, it generates flashcards, cloze deletions, and MCQs — then schedules your reviews using spaced repetition so you actually retain what you study.
 
 ---
 
@@ -14,41 +14,39 @@ Most people take notes and never look at them again. Passive re-reading feels pr
 
 ## How it Works
 
-1. **Write notes** in a Markdown editor
-2. **Mark terms** manually (`==term==` for flashcards, `{{term}}` for cloze) or let AI detect them
-3. **AI generates** flashcards, MCQs, and cloze deletions from your content
-4. **Review daily** — cards are shown using the Leitner spaced repetition system
-5. **Track progress** — see retention curves, streaks, and weak spots on your dashboard
+1. **Write notes** in a rich text editor
+2. **Generate flashcards** — AI reads your note and creates flashcards, MCQs, and cloze deletions
+3. **Review daily** — cards are shown one at a time using the Leitner spaced repetition system
+4. **Track progress** — dashboard shows streaks, due cards, and weekly activity
 
 ---
 
 ## Features
 
 ### Notes
-- Markdown editor with live preview
-- Auto-save
-- Manual syntax for marking terms (`==term==`, `{{term}}`)
-- Search, filter, and folder/tag organization
+- Rich text editor (Tiptap) with toolbar — headings, bold, italic, lists, code blocks
+- Auto-save with debounce
+- Search notes by title
+- Create, edit, delete
 
-### AI (powered by Ollama — runs locally, no API costs)
-- Auto-detects content type (definitions, processes, comparisons, lists)
-- Generates flashcards, MCQs with plausible wrong answers, and cloze deletions
-- Hybrid mode — manual marks + AI fills the gaps
-- Mnemonic generation
-- Note review — flags inaccuracies, gaps, and unclear sections
+### AI (powered by Groq — fast, free)
+- Generates flashcards, MCQs with plausible wrong answers, and cloze deletions from any note
+- One click — results saved to database instantly
+- Re-generate any time to refresh cards
 
 ### Spaced Repetition
 - Leitner system (5 boxes)
-- Mixed review sessions — flashcards, cloze, and MCQs shuffled together
-- Card rating (correct/incorrect) moves cards between boxes
-- Automatic scheduling of next review dates
-- Session summary with score and weak areas
+- Mixed review sessions — flashcards, cloze, and MCQs shuffled
+- Correct → move to next box, Incorrect → back to box 1
+- Automatic scheduling (1, 2, 4, 8, 16 day intervals)
+- Session summary with score
 
 ### Progress Dashboard
-- Due cards count and study streaks
-- Strength meter per card
-- Weak spot identification
-- Basic retention curves
+- Due cards count with one-click review
+- Total notes and flashcard counts
+- Study streak tracking
+- Weekly review activity chart (correct vs incorrect)
+- Recent notes list
 
 ---
 
@@ -57,15 +55,13 @@ Most people take notes and never look at them again. Passive re-reading feels pr
 | Layer | Technology |
 |---|---|
 | Framework | Next.js 16 (App Router) |
-| Language | TypeScript (strict) |
+| Language | TypeScript |
 | Styling | Tailwind CSS v4 + shadcn/ui |
-| Animation | Framer Motion |
-| Global State | Zustand |
-| Server State | TanStack Query |
-| Forms | React Hook Form + Zod |
+| Editor | Tiptap |
 | Auth | NextAuth.js v5 (GitHub OAuth) |
-| AI | Vercel AI SDK + Ollama (local) |
-| Database | PostgreSQL |
+| AI | Vercel AI SDK + Groq (llama-3.3-70b) |
+| Database | PostgreSQL (Neon) |
+| ORM | Prisma |
 | Charts | Recharts |
 | Deploy | Vercel |
 
@@ -77,8 +73,9 @@ Most people take notes and never look at them again. Passive re-reading feels pr
 
 - Node.js 18+
 - pnpm
-- PostgreSQL
-- [Ollama](https://ollama.ai) (for AI features)
+- A [Neon](https://neon.tech) database (free tier works)
+- A [Groq](https://console.groq.com) API key (free)
+- A GitHub OAuth App
 
 ### Installation
 
@@ -92,7 +89,10 @@ pnpm install
 
 # Set up environment variables
 cp .env.example .env.local
-# Fill in your values (see below)
+# Fill in your values
+
+# Run database migrations
+npx prisma@5 migrate deploy
 
 # Start the dev server
 pnpm dev
@@ -106,13 +106,26 @@ Open [http://localhost:3000](http://localhost:3000).
 AUTH_SECRET=           # Generate with: pnpm dlx auth secret
 AUTH_GITHUB_ID=        # GitHub OAuth App Client ID
 AUTH_GITHUB_SECRET=    # GitHub OAuth App Client Secret
-DATABASE_URL=          # PostgreSQL connection string (coming soon)
+DATABASE_URL=          # Neon PostgreSQL connection string
+GROQ_API_KEY=          # Groq API key (free at console.groq.com)
 ```
 
-To set up GitHub OAuth:
+#### GitHub OAuth Setup
 1. GitHub → Settings → Developer settings → OAuth Apps → New OAuth App
 2. Homepage URL: `http://localhost:3000`
 3. Callback URL: `http://localhost:3000/api/auth/callback/github`
+
+---
+
+## Deploying to Vercel
+
+1. Push to GitHub
+2. Import repo on [vercel.com](https://vercel.com)
+3. Add all environment variables from above in Vercel project settings
+4. Update GitHub OAuth App callback URL to `https://your-app.vercel.app/api/auth/callback/github`
+5. Deploy
+
+Vercel auto-runs `pnpm build` which includes `prisma generate`.
 
 ---
 
@@ -121,20 +134,23 @@ To set up GitHub OAuth:
 ```
 src/
 ├── app/                    # Routes (Next.js App Router)
-│   ├── (auth)/             # Public routes — signin, signup
+│   ├── (auth)/             # Public routes — signin
 │   ├── (dashboard)/        # Protected routes — dashboard, notes, review
 │   └── api/
 │       ├── auth/           # NextAuth handler
-│       └── notes/          # Notes CRUD route handlers
-├── components/             # Reusable UI components
-│   ├── notes/              # Notes-specific components (NoteEditor, NoteCard)
+│       ├── notes/          # Notes CRUD route handlers
+│       ├── ai/generate/    # AI flashcard generation
+│       └── review/         # Review result submission
+├── components/
+│   ├── dashboard/          # Dashboard charts and stats
+│   ├── notes/              # NoteEditor, NoteCard, RichTextEditor
+│   ├── review/             # ReviewSession
 │   └── ui/                 # shadcn/ui primitives
 ├── lib/
 │   ├── actions/            # Server Actions (createNote, deleteNote)
 │   ├── auth.ts             # NextAuth config
-│   └── db.ts               # Prisma singleton
-├── hooks/                  # Custom React hooks
-├── store/                  # Zustand global state
+│   ├── db.ts               # Prisma singleton
+│   └── tiptap.ts           # Tiptap JSON utilities
 └── types/                  # TypeScript type definitions
 ```
 
@@ -142,29 +158,28 @@ src/
 
 ## Roadmap
 
-### MVP (in progress)
+### MVP
 - [x] Project setup + App Router scaffold
 - [x] Layout — sidebar, header, dark/light mode
 - [x] Auth — GitHub OAuth, protected routes
-- [x] Database schema + PostgreSQL connection (Neon)
-- [x] Notes CRUD — create, auto-save, delete
-- [ ] Markdown editor with live preview
-- [ ] Manual marking syntax + flashcard generation
-- [ ] AI flashcard, MCQ, and cloze generation
-- [ ] Spaced repetition review sessions
-- [ ] Progress dashboard
+- [x] Database schema + PostgreSQL (Neon)
+- [x] Notes CRUD — create, rich text editor, auto-save, search, delete
+- [x] AI flashcard, MCQ, and cloze generation (Groq)
+- [x] Spaced repetition review sessions (Leitner system)
+- [x] Progress dashboard with streak and weekly chart
 
 ### v2 (planned)
 - Mind maps (React Flow)
 - Feynman / teach-back mode
 - Cheat sheet generation
 - SM-2 algorithm upgrade
+- Manual marking syntax (`==term==`, `{{cloze}}`)
+- Search note content (not just title)
 - Mobile app (PWA)
-- Collaboration — share notes and decks
 - Import from Notion / Anki / Quizlet
 
 ---
 
 ## Status
 
-Active development. Currently completing **Phase 2 — Notes System**.
+MVP complete. Deployed on Vercel.
